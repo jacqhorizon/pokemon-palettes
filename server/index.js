@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require("express");
 //Heroku sets this value when deployed, otherwise runs on port 3001
 const PORT = process.env.PORT || 3001;
