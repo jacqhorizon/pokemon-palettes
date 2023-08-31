@@ -159,12 +159,12 @@ const EvaluatePokeData = () => {
     const range = hMax - hMin
     return range
   }
-  const [stuff, setStuff] = useState('');
+  const [stuff, setStuff] = useState('')
   const getPalette = () => {
     const image = new Image()
     image.crossOrigin = 'anonymous'
     image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
-  
+
     image.onload = () => {
       const canvas = document.createElement('canvas')
       canvas.width = image.width
@@ -196,10 +196,45 @@ const EvaluatePokeData = () => {
   }
   console.log(stuff)
 
+  //function that returns a promise
+  const getImage = () =>
+    new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'Anonymous'
+      img.addEventListener('load', () => resolve(img))
+      img.addEventListener('error', (err) => reject(err))
+      img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png`
+    })
+
+  const getCanvas = (image) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = image.width
+    canvas.height = image.height
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(image, 0, 0)
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    let rgbValues = buildRgb(imageData.data)
+    let newValues = quantization(rgbValues, 0)
+    //   setRgbPalette(newValues)
+    let tmp = []
+    newValues.forEach((color) => {
+      let converted = rgbToHsv(color)
+      tmp.push(converted)
+    })
+    return tmp
+  }
+
   useEffect(() => {
     if (pokemon) {
       getPalette()
       // pixelate()
+      getImage()
+        .then((img) => {
+          let values = getCanvas(img)
+          console.log(values)
+        })
+        .catch((err) => console.error(err))
     }
   }, [pokemon])
 
