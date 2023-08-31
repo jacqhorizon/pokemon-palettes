@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
+import EvaluatePokeData from './Pages/evaluatePokeData'
 
 function App() {
   const [pokemon, setPokemon] = useState(null)
@@ -49,7 +50,8 @@ function App() {
   }
 
   function fetchKantoPokemon() {
-    let pokeId = Math.floor(Math.random() * 100)
+    // let pokeId = Math.floor(Math.random() * 100)
+    let pokeId = 1
     // let pokeId = Math.floor(3)
     fetch(`https://pokeapi.co/api/v2/pokemon/${pokeId}`)
       .then((response) => {
@@ -287,6 +289,7 @@ function App() {
        let converted = rgbToHsv(color)
        tmp.push(converted)
       })
+      console.log(tmp)
       setHsvPalette(tmp)
       let range = getType(tmp)
       if (range > 160) {
@@ -315,6 +318,7 @@ function App() {
   return (
     <div className='App'>
       <header className='App-header'>
+        <EvaluatePokeData />
         {!pokemon ? (
           'loading'
         ) : winning ? (
@@ -331,8 +335,8 @@ function App() {
             </div>
             <canvas
               id='canvas'
-              width='200'
-              height='200'
+              width='600'
+              height='600'
               style={{ border: 'solid 1px black' }}
             ></canvas>
             {rgbPalette ? (
